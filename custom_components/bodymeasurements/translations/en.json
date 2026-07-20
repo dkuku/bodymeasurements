@@ -1,0 +1,75 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Body Measurements profile",
+        "description": "Create a profile and point it at the entities that hold your tape measurements. Only weight is required; the more circumferences you provide, the more metrics are produced.",
+        "data": {
+          "name": "Profile name",
+          "birthday": "Birthday",
+          "gender": "Gender",
+          "height": "Height",
+          "weight": "Weight entity",
+          "waist": "Waist circumference entity",
+          "hip": "Hip circumference entity",
+          "neck": "Neck circumference entity"
+        }
+      }
+    },
+    "error": {
+      "invalid_date": "Invalid date. Use the YYYY-MM-DD format.",
+      "height_invalid": "Enter a height in centimetres between 50 and 250.",
+      "name_invalid": "Enter a valid profile name."
+    },
+    "abort": {
+      "already_configured": "A profile with this name already exists."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Edit measurements",
+        "description": "Update the height and the source entities for this profile.",
+        "data": {
+          "height": "Height",
+          "weight": "Weight entity",
+          "waist": "Waist circumference entity",
+          "hip": "Hip circumference entity",
+          "neck": "Neck circumference entity"
+        }
+      }
+    },
+    "error": {
+      "height_invalid": "Enter a height in centimetres between 50 and 250."
+    }
+  },
+  "selector": {
+    "gender": {
+      "options": {
+        "male": "Male",
+        "female": "Female"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "bmi": { "name": "BMI" },
+      "ponderal_index": { "name": "Ponderal index" },
+      "waist_to_height_ratio": { "name": "Waist-to-height ratio" },
+      "waist_to_hip_ratio": { "name": "Waist-to-hip ratio" },
+      "body_roundness_index": { "name": "Body roundness index" },
+      "a_body_shape_index": { "name": "A body shape index" },
+      "conicity_index": { "name": "Conicity index" },
+      "body_adiposity_index": { "name": "Body adiposity index" },
+      "body_fat_navy": { "name": "Body fat (Navy tape)" },
+      "body_fat_deurenberg": { "name": "Body fat (Deurenberg)" },
+      "relative_fat_mass": { "name": "Relative fat mass" },
+      "fat_mass": { "name": "Fat mass" },
+      "lean_body_mass": { "name": "Lean body mass" },
+      "fat_free_mass_index": { "name": "Fat-free mass index" },
+      "fat_mass_index": { "name": "Fat mass index" },
+      "skeletal_muscle_mass": { "name": "Skeletal muscle mass" },
+      "skeletal_muscle_index": { "name": "Skeletal muscle index" }
+    }
+  }
+}

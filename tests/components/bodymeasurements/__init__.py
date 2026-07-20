@@ -1,0 +1,1 @@
+"""Body Measurements component tests."""

@@ -1,0 +1,16 @@
+{
+  "domain": "bodymeasurements",
+  "name": "Body Measurements",
+  "codeowners": [
+    "@dkuku"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/dkuku/bodymeasurements",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/dkuku/bodymeasurements/issues",
+  "loggers": [
+    "custom_components.bodymeasurements"
+  ],
+  "requirements": [],
+  "version": "0.1.0"
+}
