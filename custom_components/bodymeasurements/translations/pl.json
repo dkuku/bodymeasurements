@@ -13,7 +13,12 @@
           "waist": "Encja obwodu talii",
           "hip": "Encja obwodu bioder",
           "neck": "Encja obwodu szyi",
-          "impedance": "Encja impedancji (opcjonalnie z wagi smart BIA)"
+          "calf": "Encja obwodu łydki (opcjonalnie)",
+          "wrist": "Encja obwodu nadgarstka (opcjonalnie)",
+          "thigh": "Encja obwodu uda (opcjonalnie)",
+          "chest": "Encja obwodu klatki (opcjonalnie)",
+          "biceps": "Encja obwodu ramienia (opcjonalnie)",
+          "ankle": "Encja obwodu kostki (opcjonalnie)"
         }
       }
     },
@@ -37,7 +42,12 @@
           "waist": "Encja obwodu talii",
           "hip": "Encja obwodu bioder",
           "neck": "Encja obwodu szyi",
-          "impedance": "Encja impedancji (opcjonalnie z wagi smart BIA)"
+          "calf": "Encja obwodu łydki (opcjonalnie)",
+          "wrist": "Encja obwodu nadgarstka (opcjonalnie)",
+          "thigh": "Encja obwodu uda (opcjonalnie)",
+          "chest": "Encja obwodu klatki (opcjonalnie)",
+          "biceps": "Encja obwodu ramienia (opcjonalnie)",
+          "ankle": "Encja obwodu kostki (opcjonalnie)"
         }
       }
     },
@@ -63,13 +73,17 @@
       "a_body_shape_index": { "name": "Wskaźnik kształtu ciała (ABSI)" },
       "conicity_index": { "name": "Wskaźnik stożkowatości (Conicity)" },
       "body_adiposity_index": { "name": "Wskaźnik otłuszczenia (BAI)" },
+      "body_density": { "name": "Gęstość ciała" },
+      "body_volume": { "name": "Objętość ciała" },
       "body_fat_navy": { "name": "Tkanka tłuszczowa (US Navy)" },
       "body_fat_deurenberg": { "name": "Tkanka tłuszczowa (Deurenberg)" },
-      "body_fat_bia": { "name": "Tkanka tłuszczowa (BIA)" },
-      "body_fat_hybrid": { "name": "Tkanka tłuszczowa (Hybryda BIA + Obwody)" },
       "relative_fat_mass": { "name": "Względna masa tłuszczu (RFM)" },
       "fat_mass": { "name": "Masa tłuszczowa" },
       "lean_body_mass": { "name": "Masa beztłuszczowa (LBM)" },
+      "bone_mass": { "name": "Masa kości" },
+      "muscle_mass": { "name": "Masa mięśniowa" },
+      "muscle_to_fat_ratio": { "name": "Stosunek mięśni do tłuszczu (MFR)" },
+      "fat_to_muscle_ratio": { "name": "Stosunek tłuszczu do mięśni (FMR)" },
       "fat_free_mass_index": { "name": "Wskaźnik beztłuszczowy (FFMI)" },
       "fat_mass_index": { "name": "Wskaźnik masy tłuszczowej (FMI)" },
       "skeletal_muscle_mass": { "name": "Masa mięśni szkieletowych" },

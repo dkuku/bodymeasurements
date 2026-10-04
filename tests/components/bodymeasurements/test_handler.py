@@ -83,8 +83,8 @@ async def test_full_measurements_flow(hass: HomeAssistant) -> None:
     handler.unload()
 
 
-async def test_hybrid_flow_with_impedance(hass: HomeAssistant) -> None:
-    """Configuring impedance unlocks BIA and Hybrid body fat sensors."""
+async def test_volumetric_and_compartment_flow(hass: HomeAssistant) -> None:
+    """Configuring circumferences unlocks volumetric and compartment sensors."""
     handler = MeasurementsHandler(
         hass,
         _config(
@@ -92,25 +92,33 @@ async def test_hybrid_flow_with_impedance(hass: HomeAssistant) -> None:
                 CONF_SENSOR_WEIGHT: "sensor.weight",
                 CONF_SENSOR_WAIST: "sensor.waist",
                 CONF_SENSOR_NECK: "sensor.neck",
-                "impedance": "sensor.impedance",
             }
         ),
-        "e_hybrid",
+        "e_volumetric",
     )
 
-    hybrid: list[float] = []
-    bia: list[float] = []
-    handler.subscribe(Metric.BODY_FAT_HYBRID, hybrid.append)
-    handler.subscribe(Metric.BODY_FAT_BIA, bia.append)
+    density: list[float] = []
+    volume: list[float] = []
+    bone: list[float] = []
+    muscle: list[float] = []
+    mfr: list[float] = []
+
+    handler.subscribe(Metric.BODY_DENSITY, density.append)
+    handler.subscribe(Metric.BODY_VOLUME, volume.append)
+    handler.subscribe(Metric.BONE_MASS, bone.append)
+    handler.subscribe(Metric.MUSCLE_MASS, muscle.append)
+    handler.subscribe(Metric.MUSCLE_TO_FAT_RATIO, mfr.append)
 
     hass.states.async_set("sensor.weight", "80.0")
     hass.states.async_set("sensor.waist", "85.0")
     hass.states.async_set("sensor.neck", "38.0")
-    hass.states.async_set("sensor.impedance", "500.0")
     await hass.async_block_till_done()
 
-    assert hybrid and 17 < hybrid[-1] < 20
-    assert bia and 21 < bia[-1] < 24
+    assert density and 1.04 < density[-1] < 1.08
+    assert volume and 74.0 < volume[-1] < 77.0
+    assert bone and 2.5 < bone[-1] < 4.0
+    assert muscle and 60.0 < muscle[-1] < 66.0
+    assert mfr and 4.0 < mfr[-1] < 6.0
     handler.unload()
 
 

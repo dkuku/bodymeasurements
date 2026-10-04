@@ -13,7 +13,12 @@
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
           "neck": "Neck circumference entity",
-          "impedance": "Impedance entity (optional smart scale BIA)"
+          "calf": "Calf circumference entity (optional)",
+          "wrist": "Wrist circumference entity (optional)",
+          "thigh": "Thigh circumference entity (optional)",
+          "chest": "Chest circumference entity (optional)",
+          "biceps": "Biceps circumference entity (optional)",
+          "ankle": "Ankle circumference entity (optional)"
         }
       }
     },
@@ -37,7 +42,12 @@
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
           "neck": "Neck circumference entity",
-          "impedance": "Impedance entity (optional smart scale BIA)"
+          "calf": "Calf circumference entity (optional)",
+          "wrist": "Wrist circumference entity (optional)",
+          "thigh": "Thigh circumference entity (optional)",
+          "chest": "Chest circumference entity (optional)",
+          "biceps": "Biceps circumference entity (optional)",
+          "ankle": "Ankle circumference entity (optional)"
         }
       }
     },
@@ -63,13 +73,17 @@
       "a_body_shape_index": { "name": "A body shape index" },
       "conicity_index": { "name": "Conicity index" },
       "body_adiposity_index": { "name": "Body adiposity index" },
+      "body_density": { "name": "Body density" },
+      "body_volume": { "name": "Body volume" },
       "body_fat_navy": { "name": "Body fat (Navy tape)" },
       "body_fat_deurenberg": { "name": "Body fat (Deurenberg)" },
-      "body_fat_bia": { "name": "Body fat (BIA)" },
-      "body_fat_hybrid": { "name": "Body fat (Hybrid BIA + Tape)" },
       "relative_fat_mass": { "name": "Relative fat mass" },
       "fat_mass": { "name": "Fat mass" },
       "lean_body_mass": { "name": "Lean body mass" },
+      "bone_mass": { "name": "Bone mass" },
+      "muscle_mass": { "name": "Muscle mass" },
+      "muscle_to_fat_ratio": { "name": "Muscle-to-fat ratio" },
+      "fat_to_muscle_ratio": { "name": "Fat-to-muscle ratio" },
       "fat_free_mass_index": { "name": "Fat-free mass index" },
       "fat_mass_index": { "name": "Fat mass index" },
       "skeletal_muscle_mass": { "name": "Skeletal muscle mass" },

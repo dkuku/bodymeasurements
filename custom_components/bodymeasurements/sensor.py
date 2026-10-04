@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import PERCENTAGE, UnitOfMass
+from homeassistant.const import PERCENTAGE, UnitOfMass, UnitOfVolume
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
@@ -141,6 +141,32 @@ _SENSORS: tuple[
     ),
     (
         SensorEntityDescription(
+            key=Metric.BODY_DENSITY.value,
+            translation_key="body_density",
+            icon="mdi:gauge",
+            native_unit_of_measurement="g/cm³",
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=3,
+        ),
+        Metric.BODY_DENSITY,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.BODY_VOLUME.value,
+            translation_key="body_volume",
+            icon="mdi:cube-outline",
+            native_unit_of_measurement=UnitOfVolume.LITERS,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=1,
+        ),
+        Metric.BODY_VOLUME,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
             key=Metric.BODY_FAT_NAVY.value,
             translation_key="body_fat_navy",
             icon="mdi:percent",
@@ -150,32 +176,6 @@ _SENSORS: tuple[
         ),
         Metric.BODY_FAT_NAVY,
         (Metric.NECK, Metric.WAIST),
-        None,
-    ),
-    (
-        SensorEntityDescription(
-            key=Metric.BODY_FAT_BIA.value,
-            translation_key="body_fat_bia",
-            icon="mdi:percent",
-            native_unit_of_measurement=PERCENTAGE,
-            state_class=SensorStateClass.MEASUREMENT,
-            suggested_display_precision=1,
-        ),
-        Metric.BODY_FAT_BIA,
-        (Metric.IMPEDANCE,),
-        None,
-    ),
-    (
-        SensorEntityDescription(
-            key=Metric.BODY_FAT_HYBRID.value,
-            translation_key="body_fat_hybrid",
-            icon="mdi:percent",
-            native_unit_of_measurement=PERCENTAGE,
-            state_class=SensorStateClass.MEASUREMENT,
-            suggested_display_precision=1,
-        ),
-        Metric.BODY_FAT_HYBRID,
-        (Metric.NECK, Metric.WAIST, Metric.IMPEDANCE),
         None,
     ),
     (
@@ -227,6 +227,56 @@ _SENSORS: tuple[
             suggested_display_precision=1,
         ),
         Metric.LEAN_BODY_MASS,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.BONE_MASS.value,
+            translation_key="bone_mass",
+            icon="mdi:bone",
+            native_unit_of_measurement=UnitOfMass.KILOGRAMS,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=2,
+        ),
+        Metric.BONE_MASS,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.MUSCLE_MASS.value,
+            translation_key="muscle_mass",
+            icon="mdi:arm-flex",
+            native_unit_of_measurement=UnitOfMass.KILOGRAMS,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=1,
+        ),
+        Metric.MUSCLE_MASS,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.MUSCLE_TO_FAT_RATIO.value,
+            translation_key="muscle_to_fat_ratio",
+            icon="mdi:scale-balance",
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=2,
+        ),
+        Metric.MUSCLE_TO_FAT_RATIO,
+        (),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.FAT_TO_MUSCLE_RATIO.value,
+            translation_key="fat_to_muscle_ratio",
+            icon="mdi:scale-balance",
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=2,
+        ),
+        Metric.FAT_TO_MUSCLE_RATIO,
         (),
         None,
     ),

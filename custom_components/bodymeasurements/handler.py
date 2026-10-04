@@ -20,11 +20,16 @@ from .const import (
     CONF_BIRTHDAY,
     CONF_GENDER,
     CONF_HEIGHT,
+    CONF_SENSOR_ANKLE,
+    CONF_SENSOR_BICEPS,
+    CONF_SENSOR_CALF,
+    CONF_SENSOR_CHEST,
     CONF_SENSOR_HIP,
-    CONF_SENSOR_IMPEDANCE,
     CONF_SENSOR_NECK,
+    CONF_SENSOR_THIGH,
     CONF_SENSOR_WAIST,
     CONF_SENSOR_WEIGHT,
+    CONF_SENSOR_WRIST,
 )
 from .metrics import compute_all
 from .models import Gender, Inputs, Metric
@@ -38,7 +43,12 @@ _SOURCE_CONF_TO_METRIC: dict[str, Metric] = {
     CONF_SENSOR_WAIST: Metric.WAIST,
     CONF_SENSOR_HIP: Metric.HIP,
     CONF_SENSOR_NECK: Metric.NECK,
-    CONF_SENSOR_IMPEDANCE: Metric.IMPEDANCE,
+    CONF_SENSOR_CALF: Metric.CALF,
+    CONF_SENSOR_WRIST: Metric.WRIST,
+    CONF_SENSOR_THIGH: Metric.THIGH,
+    CONF_SENSOR_CHEST: Metric.CHEST,
+    CONF_SENSOR_BICEPS: Metric.BICEPS,
+    CONF_SENSOR_ANKLE: Metric.ANKLE,
 }
 
 
@@ -169,7 +179,12 @@ class MeasurementsHandler:
             waist=self._sources.get(Metric.WAIST),
             hip=self._sources.get(Metric.HIP),
             neck=self._sources.get(Metric.NECK),
-            impedance=self._sources.get(Metric.IMPEDANCE),
+            calf=self._sources.get(Metric.CALF),
+            wrist=self._sources.get(Metric.WRIST),
+            thigh=self._sources.get(Metric.THIGH),
+            chest=self._sources.get(Metric.CHEST),
+            biceps=self._sources.get(Metric.BICEPS),
+            ankle=self._sources.get(Metric.ANKLE),
         )
 
     def _recalculate(self) -> None:

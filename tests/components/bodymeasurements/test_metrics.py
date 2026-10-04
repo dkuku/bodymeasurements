@@ -66,31 +66,68 @@ def test_navy_female_requires_hip() -> None:
     assert metrics.body_fat_navy(_male(gender=Gender.FEMALE)) is not None
 
 
-def test_body_fat_bia_and_hybrid() -> None:
-    """BIA and Hybrid body fat estimators compute expected values."""
-    inp = _male(impedance=500.0)
-    # BIA: LBM ≈ 61.88 kg → BF% ≈ 22.65 %
-    assert metrics.body_fat_bia(inp) == pytest.approx(22.65, abs=0.2)
-    # Navy ≈ 16.11 %, Hybrid (65% Navy + 35% BIA) ≈ 18.40 %
-    assert metrics.body_fat_hybrid(inp) == pytest.approx(18.40, abs=0.2)
+def test_density_and_volume() -> None:
+    """Body density and volume match physical principles (V = W / D)."""
+    inp = _male()
+    density = metrics.body_density(inp)
+    volume = metrics.body_volume(inp)
+    assert density == pytest.approx(1.062, abs=0.01)
+    assert volume == pytest.approx(80.0 / density, abs=0.1)
+
+    # Deurenberg fallback density when neck/waist tape is missing
+    tape_missing = _male(waist=None, neck=None)
+    fallback_d = metrics.body_density(tape_missing)
+    assert fallback_d is not None
+    assert 1.03 < fallback_d < 1.08
+
+
+def test_bone_and_muscle_compartments() -> None:
+    """Bone mass, soft muscle mass, and muscle-to-fat ratios match multi-compartment model."""
+    inp = _male()
+    bone = metrics.bone_mass(inp)
+    assert bone == pytest.approx(3.38, abs=0.1)
+
+    # Wrist frame adjustment test
+    robust_frame = _male(wrist=19.8)  # 10% thicker wrist than reference 18.0 cm
+    slender_frame = _male(wrist=16.2)  # 10% thinner wrist than reference 18.0 cm
+    assert metrics.bone_mass(robust_frame) > bone
+    assert metrics.bone_mass(slender_frame) < bone
+
+    # Soft muscle mass = Weight - Fat Mass - Bone Mass
+    muscle = metrics.muscle_mass(inp)
+    fat = metrics.fat_mass(inp)
+    assert muscle is not None and fat is not None
+    assert muscle + fat + bone == pytest.approx(80.0, abs=0.1)
+
+    # Muscle-to-fat and fat-to-muscle ratios
+    mfr = metrics.muscle_to_fat_ratio(inp)
+    fmr = metrics.fat_to_muscle_ratio(inp)
+    assert mfr == pytest.approx(muscle / fat, abs=0.01)
+    assert fmr == pytest.approx(fat / muscle, abs=0.01)
+    assert mfr > 4.0  # Athletic/healthy male profile
+
+
+def test_skeletal_muscle_mass_with_calf() -> None:
+    """Santos et al. 2019 calf formula refines SMM when calf circumference is given."""
+    base_male = _male()
+    # Lee 2000 model without calf
+    smm_lee = metrics.skeletal_muscle_mass(base_male)
+    assert smm_lee == pytest.approx(33.43, abs=0.1)
+
+    # Santos 2019 model with calf
+    calf_male = _male(calf=38.0)
+    smm_santos = metrics.skeletal_muscle_mass(calf_male)
+    assert smm_santos is not None and 26.0 < smm_santos < 32.0
 
 
 def test_primary_body_fat_precedence() -> None:
-    """Estimator precedence: Hybrid → Navy → BIA → Deurenberg."""
-    # 1. Both tape + impedance → Hybrid
-    hybrid_inp = _male(impedance=500.0)
-    assert metrics.fat_mass(hybrid_inp) == pytest.approx(80 * 0.1840, abs=0.3)
-
-    # 2. Tape only (no impedance) → Navy (≈16.11 %)
-    navy_inp = _male(impedance=None)
+    """Estimator precedence: Navy tape → Deurenberg."""
+    # 1. Full tape → Navy (≈16.11 %)
+    navy_inp = _male()
     assert metrics.fat_mass(navy_inp) == pytest.approx(80 * 0.1611, abs=0.2)
 
-    # 3. Impedance only (no neck/tape) → BIA (≈22.65 %)
-    bia_inp = _male(neck=None, impedance=500.0)
-    assert metrics.fat_mass(bia_inp) == pytest.approx(80 * 0.2265, abs=0.3)
-
-    # 4. Neither tape nor impedance → Deurenberg (≈21.48 %)
-    deurenberg_inp = _male(neck=None, impedance=None)
+    # 2. No neck/tape → Deurenberg (≈21.48 %)
+    deurenberg_inp = _male(neck=None)
     assert metrics.fat_mass(deurenberg_inp) == pytest.approx(80 * 0.2148, abs=0.2)
 
 
@@ -118,18 +155,24 @@ def test_normalized_ffmi() -> None:
 
 
 def test_compute_all_gates_on_missing_measurements() -> None:
-    """Only weight configured → BMI-family present, tape metrics absent."""
+    """Only weight configured → baseline metrics present, tape metrics absent."""
     minimal = Inputs(height=180.0, age=35, gender=Gender.MALE, weight=80.0)
     result = metrics.compute_all(minimal)
 
     for present in (
         Metric.BMI,
         Metric.PONDERAL_INDEX,
+        Metric.BODY_DENSITY,
+        Metric.BODY_VOLUME,
         Metric.BODY_FAT_DEURENBERG,
         Metric.SKELETAL_MUSCLE_MASS,
         Metric.SMI,
         Metric.FAT_MASS,
         Metric.LEAN_BODY_MASS,
+        Metric.BONE_MASS,
+        Metric.MUSCLE_MASS,
+        Metric.MUSCLE_TO_FAT_RATIO,
+        Metric.FAT_TO_MUSCLE_RATIO,
         Metric.FFMI,
         Metric.FMI,
     ):
@@ -143,28 +186,31 @@ def test_compute_all_gates_on_missing_measurements() -> None:
         Metric.CONICITY_INDEX,
         Metric.BAI,
         Metric.BODY_FAT_NAVY,
-        Metric.BODY_FAT_BIA,
-        Metric.BODY_FAT_HYBRID,
         Metric.RFM,
     ):
         assert absent not in result
 
 
-def test_compute_all_with_impedance() -> None:
-    """Configuring impedance unlocks BIA and Hybrid body fat."""
+def test_compute_all_with_full_measurements() -> None:
+    """Full measurements compute all 23 derived metrics."""
     full = Inputs(
         height=180.0,
         age=35,
         gender=Gender.MALE,
         weight=80.0,
         waist=85.0,
+        hip=95.0,
         neck=38.0,
-        impedance=500.0,
+        calf=38.0,
+        wrist=18.0,
     )
     result = metrics.compute_all(full)
-    assert Metric.BODY_FAT_BIA in result
-    assert Metric.BODY_FAT_HYBRID in result
+    assert len(result) == len(metrics.CALCULATORS)
     assert Metric.BODY_FAT_NAVY in result
+    assert Metric.BODY_VOLUME in result
+    assert Metric.BONE_MASS in result
+    assert Metric.MUSCLE_MASS in result
+    assert Metric.MUSCLE_TO_FAT_RATIO in result
 
 
 def test_compute_all_without_weight_is_empty() -> None:
