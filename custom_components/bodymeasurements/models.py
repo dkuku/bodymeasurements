@@ -26,6 +26,14 @@ class Gender(StrEnum):
     FEMALE = "female"
 
 
+class BodyFatMethod(StrEnum):
+    """Method used for primary body fat estimation."""
+
+    CALIBRATED = "calibrated"
+    NAVY = "navy"
+    DEURENBERG = "deurenberg"
+
+
 class Metric(StrEnum):
     """All metrics produced by the integration.
 
@@ -58,6 +66,7 @@ class Metric(StrEnum):
     # ── Density, volume & body-fat estimators ──────────────────────────────
     BODY_DENSITY = "body_density"
     BODY_VOLUME = "body_volume"
+    BODY_FAT_CALIBRATED = "body_fat_calibrated"
     BODY_FAT_NAVY = "body_fat_navy"
     BODY_FAT_DEURENBERG = "body_fat_deurenberg"
     RFM = "relative_fat_mass"
@@ -116,6 +125,7 @@ class Inputs:
     chest: float | None = None
     biceps: float | None = None
     ankle: float | None = None
+    body_fat_method: BodyFatMethod = BodyFatMethod.CALIBRATED
 
     @property
     def height_m(self) -> float:

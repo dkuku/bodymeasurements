@@ -97,12 +97,14 @@ async def test_volumetric_and_compartment_flow(hass: HomeAssistant) -> None:
         "e_volumetric",
     )
 
+    calibrated_fat: list[float] = []
     density: list[float] = []
     volume: list[float] = []
     bone: list[float] = []
     muscle: list[float] = []
     mfr: list[float] = []
 
+    handler.subscribe(Metric.BODY_FAT_CALIBRATED, calibrated_fat.append)
     handler.subscribe(Metric.BODY_DENSITY, density.append)
     handler.subscribe(Metric.BODY_VOLUME, volume.append)
     handler.subscribe(Metric.BONE_MASS, bone.append)
@@ -114,11 +116,12 @@ async def test_volumetric_and_compartment_flow(hass: HomeAssistant) -> None:
     hass.states.async_set("sensor.neck", "38.0")
     await hass.async_block_till_done()
 
+    assert calibrated_fat and 10.0 < calibrated_fat[-1] < 15.0
     assert density and 1.04 < density[-1] < 1.08
     assert volume and 74.0 < volume[-1] < 77.0
     assert bone and 2.5 < bone[-1] < 4.0
-    assert muscle and 60.0 < muscle[-1] < 66.0
-    assert mfr and 4.0 < mfr[-1] < 6.0
+    assert muscle and 60.0 < muscle[-1] < 70.0
+    assert mfr and 4.0 < mfr[-1] < 7.0
     handler.unload()
 
 

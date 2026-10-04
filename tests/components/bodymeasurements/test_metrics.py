@@ -5,7 +5,12 @@ from __future__ import annotations
 import pytest
 
 from custom_components.bodymeasurements import metrics
-from custom_components.bodymeasurements.models import Gender, Inputs, Metric
+from custom_components.bodymeasurements.models import (
+    BodyFatMethod,
+    Gender,
+    Inputs,
+    Metric,
+)
 
 
 def _male(**overrides) -> Inputs:
@@ -85,7 +90,7 @@ def test_bone_and_muscle_compartments() -> None:
     """Bone mass, soft muscle mass, and muscle-to-fat ratios match multi-compartment model."""
     inp = _male()
     bone = metrics.bone_mass(inp)
-    assert bone == pytest.approx(3.38, abs=0.1)
+    assert bone == pytest.approx(3.51, abs=0.1)
 
     # Wrist frame adjustment test
     robust_frame = _male(wrist=19.8)  # 10% thicker wrist than reference 18.0 cm
@@ -121,22 +126,33 @@ def test_skeletal_muscle_mass_with_calf() -> None:
 
 
 def test_primary_body_fat_precedence() -> None:
-    """Estimator precedence: Navy tape → Deurenberg."""
-    # 1. Full tape → Navy (≈16.11 %)
-    navy_inp = _male()
-    assert metrics.fat_mass(navy_inp) == pytest.approx(80 * 0.1611, abs=0.2)
+    """Estimator precedence and model selection."""
+    # 1. Default is calibrated (weight-aware BYU clinical OLS model, ~12.89 %)
+    calibrated_inp = _male()
+    assert metrics.body_fat_calibrated(calibrated_inp) == pytest.approx(12.89, abs=0.1)
+    assert metrics._primary_body_fat(calibrated_inp) == pytest.approx(12.89, abs=0.1)
 
-    # 2. No neck/tape → Deurenberg (≈21.48 %)
-    deurenberg_inp = _male(neck=None)
-    assert metrics.fat_mass(deurenberg_inp) == pytest.approx(80 * 0.2148, abs=0.2)
+    # 2. Selected Navy (classic 1984 tape model, ~16.11 %)
+    navy_inp = _male(body_fat_method=BodyFatMethod.NAVY)
+    assert metrics.body_fat_navy(navy_inp) == pytest.approx(16.11, abs=0.1)
+    assert metrics._primary_body_fat(navy_inp) == pytest.approx(16.11, abs=0.1)
+
+    # 3. Selected Deurenberg (BMI-based, ~21.48 %)
+    deurenberg_inp = _male(body_fat_method=BodyFatMethod.DEURENBERG)
+    assert metrics.body_fat_deurenberg(deurenberg_inp) == pytest.approx(21.48, abs=0.1)
+    assert metrics._primary_body_fat(deurenberg_inp) == pytest.approx(21.48, abs=0.1)
+
+    # 4. Calibrated chosen but tape missing -> falls back to Deurenberg
+    tape_missing = _male(neck=None, waist=None)
+    assert metrics._primary_body_fat(tape_missing) == pytest.approx(21.48, abs=0.1)
 
 
 # ── Masses & indices ───────────────────────────────────────────────────────
 
 
 def test_masses_and_indices() -> None:
-    """Lean mass, FFMI, FMI, SMM and SMI match hand-computed values."""
-    inp = _male()
+    """Lean mass, FFMI, FMI, SMM and SMI match hand-computed values with Navy method."""
+    inp = _male(body_fat_method=BodyFatMethod.NAVY)
     assert metrics.lean_body_mass(inp) == pytest.approx(67.1, abs=0.3)
     assert metrics.ffmi(inp) == pytest.approx(20.7, abs=0.1)
     assert metrics.fmi(inp) == pytest.approx(3.98, abs=0.1)
@@ -185,6 +201,7 @@ def test_compute_all_gates_on_missing_measurements() -> None:
         Metric.ABSI,
         Metric.CONICITY_INDEX,
         Metric.BAI,
+        Metric.BODY_FAT_CALIBRATED,
         Metric.BODY_FAT_NAVY,
         Metric.RFM,
     ):
@@ -192,7 +209,7 @@ def test_compute_all_gates_on_missing_measurements() -> None:
 
 
 def test_compute_all_with_full_measurements() -> None:
-    """Full measurements compute all 23 derived metrics."""
+    """Full measurements compute all 24 derived metrics."""
     full = Inputs(
         height=180.0,
         age=35,
@@ -206,6 +223,7 @@ def test_compute_all_with_full_measurements() -> None:
     )
     result = metrics.compute_all(full)
     assert len(result) == len(metrics.CALCULATORS)
+    assert Metric.BODY_FAT_CALIBRATED in result
     assert Metric.BODY_FAT_NAVY in result
     assert Metric.BODY_VOLUME in result
     assert Metric.BONE_MASS in result

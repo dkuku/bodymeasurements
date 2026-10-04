@@ -6,7 +6,12 @@ from __future__ import annotations
 import argparse
 
 from custom_components.bodymeasurements import metrics
-from custom_components.bodymeasurements.models import Gender, Inputs, Metric
+from custom_components.bodymeasurements.models import (
+    BodyFatMethod,
+    Gender,
+    Inputs,
+    Metric,
+)
 
 
 def _prompt_float(prompt: str, default: float | None = None) -> float | None:
@@ -43,6 +48,12 @@ def main() -> None:
     parser.add_argument(
         "--wrist", type=float, help="Obwód nadgarstka w cm (opcjonalny)"
     )
+    parser.add_argument(
+        "--method",
+        choices=["calibrated", "navy", "deurenberg"],
+        default="calibrated",
+        help="Główny model tłuszczowy: calibrated / navy / deurenberg (domyślnie calibrated)",
+    )
 
     args = parser.parse_args()
 
@@ -76,6 +87,18 @@ def main() -> None:
             "Obwód nadgarstka w najwęższym miejscu [cm] (poprawka na kości)"
         )
         calf = _prompt_float("Obwód łydki w najszerszym miejscu [cm] (precyzja mięśni)")
+
+        print("\n--- Wybór modelu tkanki tłuszczowej ---")
+        print("  1) Model skalibrowany klinicznie z wagą (BYU OLS) [ZALECANY]")
+        print("  2) Klasyczny model US Navy 1984 (taśma bez wagi)")
+        print("  3) Deurenberg (z wagi i BMI)")
+        m_raw = input("Wybór modelu [1]: ").strip()
+        if m_raw == "2":
+            method = BodyFatMethod.NAVY
+        elif m_raw == "3":
+            method = BodyFatMethod.DEURENBERG
+        else:
+            method = BodyFatMethod.CALIBRATED
     else:
         height = args.height or 180.0
         weight = args.weight or 80.0
@@ -86,6 +109,7 @@ def main() -> None:
         hip = args.hip
         calf = args.calf
         wrist = args.wrist
+        method = BodyFatMethod(args.method)
 
     inp = Inputs(
         height=height,
@@ -97,6 +121,7 @@ def main() -> None:
         hip=hip,
         calf=calf,
         wrist=wrist,
+        body_fat_method=method,
     )
 
     res = metrics.compute_all(inp)
@@ -111,16 +136,26 @@ def main() -> None:
     if Metric.BODY_VOLUME in res:
         print(f"  • Całkowita objętość:     {res[Metric.BODY_VOLUME]:.1f} litrów (dm³)")
 
-    print("\n[2] SKŁAD CIAŁA (WIELOKOMPONENTOWY)")
+    print("\n[2] PORÓWNANIE MODELI TKANKI TŁUSZCZOWEJ (% BF)")
+    if Metric.BODY_FAT_CALIBRATED in res:
+        is_sel = " [AKTYWNY]" if method == BodyFatMethod.CALIBRATED else ""
+        print(
+            f"  • Model skalibrowany (z wagą, BYU): {res[Metric.BODY_FAT_CALIBRATED]:.1f} %{is_sel}"
+        )
     if Metric.BODY_FAT_NAVY in res:
+        is_sel = " [AKTYWNY]" if method == BodyFatMethod.NAVY else ""
         print(
-            f"  • Tkanka tłuszczowa:      {res[Metric.BODY_FAT_NAVY]:.1f} % (US Navy Tape)"
+            f"  • Model US Navy (1984, bez wagi):   {res[Metric.BODY_FAT_NAVY]:.1f} %{is_sel}"
         )
-    elif Metric.BODY_FAT_DEURENBERG in res:
+    if Metric.BODY_FAT_DEURENBERG in res:
+        is_sel = " [AKTYWNY]" if method == BodyFatMethod.DEURENBERG else ""
         print(
-            f"  • Tkanka tłuszczowa:      {res[Metric.BODY_FAT_DEURENBERG]:.1f} % (Deurenberg BMI)"
+            f"  • Model Deurenberg (z BMI):         {res[Metric.BODY_FAT_DEURENBERG]:.1f} %{is_sel}"
         )
+    if Metric.RFM in res:
+        print(f"  • Względna masa tłuszczu (RFM):     {res[Metric.RFM]:.1f} %")
 
+    print("\n[3] ROZBICIE KOMPONENTÓW TKANKOWYCH (wg wybranego modelu)")
     if Metric.FAT_MASS in res:
         print(f"  • Masa tłuszczu:          {res[Metric.FAT_MASS]:.1f} kg")
     if Metric.LEAN_BODY_MASS in res:
@@ -138,7 +173,7 @@ def main() -> None:
             f"  • Mięśnie szkieletowe:    {res[Metric.SKELETAL_MUSCLE_MASS]:.1f} kg{smm_info}"
         )
 
-    print("\n[3] BIOMARKERY METABOLICZNE & REKOMPOZYCJA")
+    print("\n[4] BIOMARKERY METABOLICZNE & REKOMPOZYCJA")
     if Metric.MUSCLE_TO_FAT_RATIO in res:
         mfr = res[Metric.MUSCLE_TO_FAT_RATIO]
         status = (
@@ -155,7 +190,7 @@ def main() -> None:
             f"  • Wskaźnik FFMI:          {res[Metric.FFMI]:.1f} kg/m² (znormalizowany: {norm_ffmi})"
         )
 
-    print("\n[4] WSKAŹNIKI KSZTAŁTU CIAŁA")
+    print("\n[5] WSKAŹNIKI KSZTAŁTU CIAŁA")
     print(f"  • BMI:                    {res.get(Metric.BMI, 0):.1f} kg/m²")
     if Metric.WHTR in res:
         whtr = res[Metric.WHTR]

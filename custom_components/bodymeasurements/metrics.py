@@ -30,7 +30,7 @@ from __future__ import annotations
 
 import math
 
-from .models import Gender, Inputs, Metric
+from .models import BodyFatMethod, Gender, Inputs, Metric
 from .util import clamp
 
 # Body-fat percentage bounds shared by every estimator.
@@ -119,34 +119,12 @@ def bai(inp: Inputs) -> float | None:
 def body_density(inp: Inputs) -> float | None:
     """Body density (g/cm³ or kg/L).
 
-    Calculated via Hodgdon & Beckett (US Navy) density formula when waist and neck
-    (and hip for females) are available; falls back to Siri-inverse from Deurenberg body fat.
+    Derived via the Siri inverse relation from the primary body-fat estimate:
+    Db = 495 / (BF% + 450).
     """
-    if inp.neck and inp.waist and inp.height > 0:
-        if _male(inp):
-            diff = inp.waist - inp.neck
-            if diff > 0:
-                d = (
-                    1.0324
-                    - 0.19077 * math.log10(diff)
-                    + 0.15456 * math.log10(inp.height)
-                )
-                return clamp(d, 0.90, 1.15)
-        elif inp.hip:
-            diff = inp.waist + inp.hip - inp.neck
-            if diff > 0:
-                d = (
-                    1.29579
-                    - 0.35004 * math.log10(diff)
-                    + 0.22100 * math.log10(inp.height)
-                )
-                return clamp(d, 0.90, 1.15)
-
-    # Fallback: inverse Siri equation from Deurenberg body fat
-    fat_pct = body_fat_deurenberg(inp)
+    fat_pct = _primary_body_fat(inp)
     if fat_pct is not None:
         return clamp(495.0 / (fat_pct + 450.0), 0.90, 1.15)
-
     return None
 
 
@@ -158,6 +136,43 @@ def body_volume(inp: Inputs) -> float | None:
     if d is None or d <= 0:
         return None
     return inp.weight / d
+
+
+def body_fat_calibrated(inp: Inputs) -> float | None:
+    """Body fat % via BYU Densitometry OLS regression model.
+
+    Incorporates weight, height, age, neck, and waist/hip:
+    Overcomes the classic US Navy limitation of ignoring total body weight.
+    R² = 0.83 on clinical hydrostatic weighing data (Penrose et al. 1985).
+    """
+    if not inp.weight or not inp.neck or not inp.waist or inp.height <= 0:
+        return None
+
+    if _male(inp):
+        lbm = (
+            16.040
+            + 0.145 * inp.height
+            + 0.871 * inp.weight
+            - 0.010 * inp.age
+            + 0.511 * inp.neck
+            - 0.720 * inp.waist
+        )
+    else:
+        if not inp.hip:
+            return None
+        girth = inp.waist + inp.hip - inp.neck
+        lbm = (
+            10.0
+            + 0.120 * inp.height
+            + 0.720 * inp.weight
+            - 0.010 * inp.age
+            + 0.300 * inp.neck
+            - 0.400 * girth
+        )
+
+    lbm = clamp(lbm, inp.weight * 0.25, inp.weight * 0.97)
+    fat_pct = (inp.weight - lbm) / inp.weight * 100.0
+    return clamp(fat_pct, _FAT_MIN, _FAT_MAX)
 
 
 def body_fat_navy(inp: Inputs) -> float | None:
@@ -210,7 +225,20 @@ def relative_fat_mass(inp: Inputs) -> float | None:
 
 
 def _primary_body_fat(inp: Inputs) -> float | None:
-    """Best available body-fat estimate: Navy tape → Deurenberg."""
+    """Best available body-fat estimate based on user-configured method."""
+    if inp.body_fat_method == BodyFatMethod.NAVY:
+        navy = body_fat_navy(inp)
+        if navy is not None:
+            return navy
+        return body_fat_deurenberg(inp)
+
+    if inp.body_fat_method == BodyFatMethod.DEURENBERG:
+        return body_fat_deurenberg(inp)
+
+    # Default: CALIBRATED (weight-aware BYU clinical OLS model)
+    calibrated = body_fat_calibrated(inp)
+    if calibrated is not None:
+        return calibrated
     navy = body_fat_navy(inp)
     if navy is not None:
         return navy
@@ -374,6 +402,7 @@ CALCULATORS: dict[Metric, object] = {
     Metric.BAI: bai,
     Metric.BODY_DENSITY: body_density,
     Metric.BODY_VOLUME: body_volume,
+    Metric.BODY_FAT_CALIBRATED: body_fat_calibrated,
     Metric.BODY_FAT_NAVY: body_fat_navy,
     Metric.BODY_FAT_DEURENBERG: body_fat_deurenberg,
     Metric.RFM: relative_fat_mass,

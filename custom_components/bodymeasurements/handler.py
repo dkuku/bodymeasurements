@@ -18,6 +18,7 @@ from homeassistant.helpers.event import async_track_state_change_event
 
 from .const import (
     CONF_BIRTHDAY,
+    CONF_BODY_FAT_METHOD,
     CONF_GENDER,
     CONF_HEIGHT,
     CONF_SENSOR_ANKLE,
@@ -30,9 +31,10 @@ from .const import (
     CONF_SENSOR_WAIST,
     CONF_SENSOR_WEIGHT,
     CONF_SENSOR_WRIST,
+    DEFAULT_BODY_FAT_METHOD,
 )
 from .metrics import compute_all
-from .models import Gender, Inputs, Metric
+from .models import BodyFatMethod, Gender, Inputs, Metric
 from .util import get_age, to_float
 
 _LOGGER = logging.getLogger(__name__)
@@ -68,6 +70,9 @@ class MeasurementsHandler:
         self._height = float(config[CONF_HEIGHT])
         self._age = get_age(config[CONF_BIRTHDAY])
         self._gender: Gender = self._config[CONF_GENDER]
+        self._body_fat_method: BodyFatMethod = BodyFatMethod(
+            self._config.get(CONF_BODY_FAT_METHOD, DEFAULT_BODY_FAT_METHOD)
+        )
 
         # entity_id → source Metric, and current raw values.
         self._entity_to_metric: dict[str, Metric] = {}
@@ -185,6 +190,7 @@ class MeasurementsHandler:
             chest=self._sources.get(Metric.CHEST),
             biceps=self._sources.get(Metric.BICEPS),
             ankle=self._sources.get(Metric.ANKLE),
+            body_fat_method=self._body_fat_method,
         )
 
     def _recalculate(self) -> None:

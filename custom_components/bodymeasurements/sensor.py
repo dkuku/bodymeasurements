@@ -167,6 +167,19 @@ _SENSORS: tuple[
     ),
     (
         SensorEntityDescription(
+            key=Metric.BODY_FAT_CALIBRATED.value,
+            translation_key="body_fat_calibrated",
+            icon="mdi:percent",
+            native_unit_of_measurement=PERCENTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=1,
+        ),
+        Metric.BODY_FAT_CALIBRATED,
+        (Metric.NECK, Metric.WAIST),
+        None,
+    ),
+    (
+        SensorEntityDescription(
             key=Metric.BODY_FAT_NAVY.value,
             translation_key="body_fat_navy",
             icon="mdi:percent",
@@ -344,8 +357,11 @@ def _can_create(
     """Return True if every source needed for this sensor is configured."""
     if not all(src in sources for src in required):
         return False
-    # US Navy method additionally needs hip for women.
-    if metric is Metric.BODY_FAT_NAVY and gender == Gender.FEMALE:
+    # Calibrated and US Navy methods additionally need hip for women.
+    if (
+        metric in (Metric.BODY_FAT_NAVY, Metric.BODY_FAT_CALIBRATED)
+        and gender == Gender.FEMALE
+    ):
         return Metric.HIP in sources
     return True
 

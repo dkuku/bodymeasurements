@@ -9,6 +9,7 @@
           "birthday": "Data urodzenia",
           "gender": "Płeć",
           "height": "Wzrost (cm)",
+          "body_fat_method": "Główny model tkanki tłuszczowej",
           "weight": "Encja wagi",
           "waist": "Encja obwodu talii",
           "hip": "Encja obwodu bioder",
@@ -38,6 +39,7 @@
         "description": "Zaktualizuj wzrost oraz encje źródłowe dla tego profilu.",
         "data": {
           "height": "Wzrost (cm)",
+          "body_fat_method": "Główny model tkanki tłuszczowej",
           "weight": "Encja wagi",
           "waist": "Encja obwodu talii",
           "hip": "Encja obwodu bioder",
@@ -61,6 +63,13 @@
         "male": "Mężczyzna",
         "female": "Kobieta"
       }
+    },
+    "body_fat_method": {
+      "options": {
+        "calibrated": "Skalibrowany klinicznie z wagą (BYU OLS - Zalecany)",
+        "navy": "Klasyczny US Navy (1984)",
+        "deurenberg": "Deurenberg (z BMI)"
+      }
     }
   },
   "entity": {
@@ -75,6 +84,7 @@
       "body_adiposity_index": { "name": "Wskaźnik otłuszczenia (BAI)" },
       "body_density": { "name": "Gęstość ciała" },
       "body_volume": { "name": "Objętość ciała" },
+      "body_fat_calibrated": { "name": "Tkanka tłuszczowa (skalibrowana z wagą)" },
       "body_fat_navy": { "name": "Tkanka tłuszczowa (US Navy)" },
       "body_fat_deurenberg": { "name": "Tkanka tłuszczowa (Deurenberg)" },
       "relative_fat_mass": { "name": "Względna masa tłuszczu (RFM)" },

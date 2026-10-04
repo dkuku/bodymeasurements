@@ -18,6 +18,8 @@ HANDLERS = "handlers"
 CONF_BIRTHDAY = "birthday"
 CONF_GENDER = "gender"
 CONF_HEIGHT = "height"
+CONF_BODY_FAT_METHOD = "body_fat_method"
+DEFAULT_BODY_FAT_METHOD = "calibrated"
 
 # Source measurement entities (input_number / number / sensor).
 # The Metric enum reuses these string keys for the raw source metrics.

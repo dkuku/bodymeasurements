@@ -20,15 +20,17 @@ from homeassistant.util import slugify
 
 from .const import (
     CONF_BIRTHDAY,
+    CONF_BODY_FAT_METHOD,
     CONF_GENDER,
     CONF_HEIGHT,
     CONF_MEASUREMENT_SOURCES,
     CONF_SENSOR_WEIGHT,
     CONSTRAINT_HEIGHT_MAX,
     CONSTRAINT_HEIGHT_MIN,
+    DEFAULT_BODY_FAT_METHOD,
     DOMAIN,
 )
-from .models import Gender
+from .models import BodyFatMethod, Gender
 
 _MEASUREMENT_DOMAINS = ["sensor", "input_number", "number"]
 
@@ -84,6 +86,10 @@ def _user_schema(defaults: dict[str, Any] | MappingProxyType[str, Any]) -> vol.S
                 CONF_HEIGHT,
                 description={"suggested_value": defaults.get(CONF_HEIGHT)},
             ): _height_selector(),
+            vol.Optional(
+                CONF_BODY_FAT_METHOD,
+                default=defaults.get(CONF_BODY_FAT_METHOD, DEFAULT_BODY_FAT_METHOD),
+            ): vol.In({method: method.value for method in BodyFatMethod}),
             **_sources_fields(defaults),
         }
     )
@@ -97,6 +103,10 @@ def _options_schema(defaults: dict[str, Any]) -> vol.Schema:
                 CONF_HEIGHT,
                 description={"suggested_value": defaults.get(CONF_HEIGHT)},
             ): _height_selector(),
+            vol.Optional(
+                CONF_BODY_FAT_METHOD,
+                default=defaults.get(CONF_BODY_FAT_METHOD, DEFAULT_BODY_FAT_METHOD),
+            ): vol.In({method: method.value for method in BodyFatMethod}),
             **_sources_fields(defaults),
         }
     )

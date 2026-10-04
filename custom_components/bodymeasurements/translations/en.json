@@ -9,6 +9,7 @@
           "birthday": "Birthday",
           "gender": "Gender",
           "height": "Height",
+          "body_fat_method": "Primary body-fat model",
           "weight": "Weight entity",
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
@@ -38,6 +39,7 @@
         "description": "Update the height and the source entities for this profile.",
         "data": {
           "height": "Height",
+          "body_fat_method": "Primary body-fat model",
           "weight": "Weight entity",
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
@@ -61,6 +63,13 @@
         "male": "Male",
         "female": "Female"
       }
+    },
+    "body_fat_method": {
+      "options": {
+        "calibrated": "Weight-calibrated clinical model (BYU OLS - Recommended)",
+        "navy": "Classic US Navy circumference model (1984)",
+        "deurenberg": "Deurenberg BMI model"
+      }
     }
   },
   "entity": {
@@ -75,6 +84,7 @@
       "body_adiposity_index": { "name": "Body adiposity index" },
       "body_density": { "name": "Body density" },
       "body_volume": { "name": "Body volume" },
+      "body_fat_calibrated": { "name": "Body fat (weight-calibrated)" },
       "body_fat_navy": { "name": "Body fat (Navy tape)" },
       "body_fat_deurenberg": { "name": "Body fat (Deurenberg)" },
       "relative_fat_mass": { "name": "Relative fat mass" },
