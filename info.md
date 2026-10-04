@@ -1,39 +1,32 @@
-# Body Measurements
+# Body Measurements & Hybrid BIA
 
-Derive body-composition metrics from **tape measurements** — no bio-impedance
-scale required. The measurement companion to
-[bodymiscale](https://github.com/dckiller51/bodymiscale): point a profile at a
-weight entity plus a few circumferences (waist, hip, neck) and get anthropometric
-indices, body-fat and muscle-mass estimates as sensors.
+Derive clinical body-composition metrics from **tape measurements** and optionally combine them with smart scale **Bioelectrical Impedance Analysis (BIA)** to overcome the "trunk blindness" of foot-to-foot smart scales.
+
+The official measurement companion to [**bodymiscale**](https://github.com/dkuku/bodymiscale): point a profile at your weight and impedance entities plus a few circumferences (waist, hip, neck) and get anthropometric indices, calibrated hybrid body-fat, and muscle-mass estimates as sensors.
 
 ## Highlights
 
-- Works with any `sensor`, `number` or `input_number` entity as a source.
-- Only **weight** is required — every extra circumference unlocks more metrics.
-- Recomputes automatically whenever a source value changes.
-- One sensor per metric, grouped under a single device per profile.
+- **Hybrid BIA + Tape Estimator:** Anchors body fat to real visceral and subcutaneous trunk dimensions, eliminating the blind spots of smart scale foot sensors.
+- **Works with any source entity:** Use `sensor`, `number`, or `input_number` entities.
+- **Progressive Unlocking:** Only **weight** is required — every extra circumference or impedance entity unlocks more metrics.
+- **Automatic Hierarchy:** Masses and indices automatically use the most accurate available body fat method:
+  $$\text{Hybrid (Tape + BIA)} \longrightarrow \text{US Navy (Tape)} \longrightarrow \text{BIA Scale} \longrightarrow \text{Deurenberg (BMI)}$$
+- **Automatic Recalculation:** Recomputes automatically whenever any source value changes.
 
-## Metrics
+## Metrics Overview
 
-| Needs (besides height/weight/age/sex) | Metrics |
-|---|---|
-| nothing extra | BMI, Ponderal index, Deurenberg body-fat, Lee-2000 skeletal muscle mass, SMI, fat mass, lean body mass, FFMI, FMI |
-| waist | Waist-to-height ratio, Body Roundness Index (BRI), A Body Shape Index (ABSI), Conicity index, Relative Fat Mass (RFM) |
-| waist + hip | Waist-to-hip ratio |
-| hip | Body Adiposity Index (BAI) |
-| neck + waist (+ hip for women) | Body fat, US Navy/Army tape method |
-
-Fat mass, lean mass, FFMI and FMI use the most accurate available body-fat
-estimate: the Navy circumference method when its tapes are configured, otherwise
-the BMI-based Deurenberg estimate.
+| Required Inputs | Metrics |
+| :--- | :--- |
+| **Weight only** | BMI, Ponderal index, Deurenberg body fat, Lee-2000 skeletal muscle mass, SMI, Fat mass, Lean body mass, FFMI, FMI |
+| **+ Waist** | Waist-to-height ratio (WHtR), Body Roundness Index (BRI), A Body Shape Index (ABSI), Conicity index, Relative Fat Mass (RFM) |
+| **+ Waist & Hip** | Waist-to-hip ratio (WHR) |
+| **+ Hip** | Body Adiposity Index (BAI) |
+| **+ Neck & Waist (+ Hip for ♀)** | Body fat (US Navy / Army tape method) |
+| **+ Impedance** | Body fat (Hardware BIA) |
+| **+ Impedance & Tape** | **Body fat (Hybrid BIA + Tape Calibration)** |
 
 ## Setup
 
 1. Install via HACS, then **restart Home Assistant**.
 2. **Settings → Devices & Services → Add Integration → Body Measurements**.
-3. Enter name, birthday, gender and height; pick your **weight** entity and,
-   optionally, waist / hip / neck entities.
-
-**Tip:** create `input_number` helpers for the circumferences you measure by
-tape — they persist between updates and are the intended "store only
-measurements" input.
+3. Enter name, birthday, gender, and height; select your **weight** entity and, optionally, waist / hip / neck / impedance entities.

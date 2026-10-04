@@ -7,6 +7,7 @@ from enum import StrEnum
 
 from .const import (
     CONF_SENSOR_HIP,
+    CONF_SENSOR_IMPEDANCE,
     CONF_SENSOR_NECK,
     CONF_SENSOR_WAIST,
     CONF_SENSOR_WEIGHT,
@@ -27,11 +28,12 @@ class Metric(StrEnum):
     entities); the rest are *derived* indices computed from measurements.
     """
 
-    # ── Source metrics (raw circumferences / weight) ───────────────────────
+    # ── Source metrics (raw circumferences / weight / impedance) ───────────
     WEIGHT = CONF_SENSOR_WEIGHT
     WAIST = CONF_SENSOR_WAIST
     HIP = CONF_SENSOR_HIP
     NECK = CONF_SENSOR_NECK
+    IMPEDANCE = CONF_SENSOR_IMPEDANCE
 
     # ── BMI & shape indices ────────────────────────────────────────────────
     BMI = "bmi"
@@ -46,6 +48,8 @@ class Metric(StrEnum):
     # ── Body-fat estimators ────────────────────────────────────────────────
     BODY_FAT_NAVY = "body_fat_navy"
     BODY_FAT_DEURENBERG = "body_fat_deurenberg"
+    BODY_FAT_BIA = "body_fat_bia"
+    BODY_FAT_HYBRID = "body_fat_hybrid"
     RFM = "relative_fat_mass"
 
     # ── Derived masses & height-normalised indices ─────────────────────────
@@ -59,7 +63,7 @@ class Metric(StrEnum):
 
 # Metrics that come directly from a configured source entity.
 SOURCE_METRICS: frozenset[Metric] = frozenset(
-    {Metric.WEIGHT, Metric.WAIST, Metric.HIP, Metric.NECK}
+    {Metric.WEIGHT, Metric.WAIST, Metric.HIP, Metric.NECK, Metric.IMPEDANCE}
 )
 
 
@@ -67,9 +71,9 @@ SOURCE_METRICS: frozenset[Metric] = frozenset(
 class Inputs:
     """Everything the pure metric functions need for one recalculation.
 
-    All lengths are centimetres, weight is kilograms. Optional fields are
-    ``None`` when the corresponding source entity is not configured or has no
-    valid value yet.
+    All lengths are centimetres, weight is kilograms, impedance is ohms.
+    Optional fields are ``None`` when the corresponding source entity is not
+    configured or has no valid value yet.
     """
 
     height: float
@@ -79,6 +83,7 @@ class Inputs:
     waist: float | None = None
     hip: float | None = None
     neck: float | None = None
+    impedance: float | None = None
 
     @property
     def height_m(self) -> float:

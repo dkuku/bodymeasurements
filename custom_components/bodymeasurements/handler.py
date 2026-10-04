@@ -21,6 +21,7 @@ from .const import (
     CONF_GENDER,
     CONF_HEIGHT,
     CONF_SENSOR_HIP,
+    CONF_SENSOR_IMPEDANCE,
     CONF_SENSOR_NECK,
     CONF_SENSOR_WAIST,
     CONF_SENSOR_WEIGHT,
@@ -37,6 +38,7 @@ _SOURCE_CONF_TO_METRIC: dict[str, Metric] = {
     CONF_SENSOR_WAIST: Metric.WAIST,
     CONF_SENSOR_HIP: Metric.HIP,
     CONF_SENSOR_NECK: Metric.NECK,
+    CONF_SENSOR_IMPEDANCE: Metric.IMPEDANCE,
 }
 
 
@@ -167,6 +169,7 @@ class MeasurementsHandler:
             waist=self._sources.get(Metric.WAIST),
             hip=self._sources.get(Metric.HIP),
             neck=self._sources.get(Metric.NECK),
+            impedance=self._sources.get(Metric.IMPEDANCE),
         )
 
     def _recalculate(self) -> None:

@@ -1,0 +1,79 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Profil pomiarów ciała",
+        "description": "Utwórz profil i wskaż encje zawierające Twoje pomiary taśmą i wagę. Wymagana jest tylko waga; im więcej obwodów podasz, tym więcej wskaźników zostanie wyliczonych.",
+        "data": {
+          "name": "Nazwa profilu",
+          "birthday": "Data urodzenia",
+          "gender": "Płeć",
+          "height": "Wzrost (cm)",
+          "weight": "Encja wagi",
+          "waist": "Encja obwodu talii",
+          "hip": "Encja obwodu bioder",
+          "neck": "Encja obwodu szyi",
+          "impedance": "Encja impedancji (opcjonalnie z wagi smart BIA)"
+        }
+      }
+    },
+    "error": {
+      "invalid_date": "Nieprawidłowa data. Użyj formatu RRRR-MM-DD.",
+      "height_invalid": "Wprowadź wzrost w centymetrach pomiędzy 50 a 250.",
+      "name_invalid": "Wprowadź prawidłową nazwę profilu."
+    },
+    "abort": {
+      "already_configured": "Profil o tej nazwie już istnieje."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Edytuj pomiary",
+        "description": "Zaktualizuj wzrost oraz encje źródłowe dla tego profilu.",
+        "data": {
+          "height": "Wzrost (cm)",
+          "weight": "Encja wagi",
+          "waist": "Encja obwodu talii",
+          "hip": "Encja obwodu bioder",
+          "neck": "Encja obwodu szyi",
+          "impedance": "Encja impedancji (opcjonalnie z wagi smart BIA)"
+        }
+      }
+    },
+    "error": {
+      "height_invalid": "Wprowadź wzrost w centymetrach pomiędzy 50 a 250."
+    }
+  },
+  "selector": {
+    "gender": {
+      "options": {
+        "male": "Mężczyzna",
+        "female": "Kobieta"
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "bmi": { "name": "BMI" },
+      "ponderal_index": { "name": "Wskaźnik Rohrera (Ponderal)" },
+      "waist_to_height_ratio": { "name": "Stosunek talia/wzrost (WHtR)" },
+      "waist_to_hip_ratio": { "name": "Stosunek talia/biodra (WHR)" },
+      "body_roundness_index": { "name": "Wskaźnik krągłości ciała (BRI)" },
+      "a_body_shape_index": { "name": "Wskaźnik kształtu ciała (ABSI)" },
+      "conicity_index": { "name": "Wskaźnik stożkowatości (Conicity)" },
+      "body_adiposity_index": { "name": "Wskaźnik otłuszczenia (BAI)" },
+      "body_fat_navy": { "name": "Tkanka tłuszczowa (US Navy)" },
+      "body_fat_deurenberg": { "name": "Tkanka tłuszczowa (Deurenberg)" },
+      "body_fat_bia": { "name": "Tkanka tłuszczowa (BIA)" },
+      "body_fat_hybrid": { "name": "Tkanka tłuszczowa (Hybryda BIA + Obwody)" },
+      "relative_fat_mass": { "name": "Względna masa tłuszczu (RFM)" },
+      "fat_mass": { "name": "Masa tłuszczowa" },
+      "lean_body_mass": { "name": "Masa beztłuszczowa (LBM)" },
+      "fat_free_mass_index": { "name": "Wskaźnik beztłuszczowy (FFMI)" },
+      "fat_mass_index": { "name": "Wskaźnik masy tłuszczowej (FMI)" },
+      "skeletal_muscle_mass": { "name": "Masa mięśni szkieletowych" },
+      "skeletal_muscle_index": { "name": "Wskaźnik masy mięśniowej (SMI)" }
+    }
+  }
+}

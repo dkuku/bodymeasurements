@@ -160,11 +160,54 @@ def relative_fat_mass(inp: Inputs) -> float | None:
     )
 
 
+def body_fat_bia(inp: Inputs) -> float | None:
+    """Body fat % from bioelectrical impedance (hardware-calibrated BIA).
+
+    Uses the foot-to-foot hardware calibrated regression (as in bodymiscale)
+    with Heymsfield sexual dimorphism adjustment for females.
+    """
+    if not inp.weight or not inp.impedance or inp.height <= 0 or inp.impedance <= 0:
+        return None
+    lbm = (
+        (inp.height * 9.058 / 100.0) * (inp.height / 100.0)
+        + inp.weight * 0.32
+        + 12.226
+        - inp.impedance * 0.0068
+        - inp.age * 0.0542
+    )
+    if not _male(inp):
+        lbm *= 0.84
+    lbm = min(lbm, inp.weight * 0.98)
+    fat_pct = (inp.weight - lbm) / inp.weight * 100.0
+    return clamp(fat_pct, _FAT_MIN, _FAT_MAX)
+
+
+def body_fat_hybrid(inp: Inputs) -> float | None:
+    """Hybrid body fat % combining tape circumferences with bioimpedance.
+
+    Overcomes the 'trunk blindness' of foot-to-foot scales:
+    anchors the baseline to physical circumferences (waist, neck, hip)
+    while incorporating dynamic bioimpedance from smart scale sensors.
+    """
+    navy = body_fat_navy(inp)
+    bia = body_fat_bia(inp)
+    if navy is None or bia is None:
+        return None
+    # Weighted ensemble: 65% tape geometry (Navy) + 35% bioimpedance (BIA)
+    return clamp(0.65 * navy + 0.35 * bia, _FAT_MIN, _FAT_MAX)
+
+
 def _primary_body_fat(inp: Inputs) -> float | None:
-    """Best available body-fat estimate: Navy (tape) → Deurenberg (BMI)."""
+    """Best available body-fat estimate: Hybrid → Navy → BIA → Deurenberg."""
+    hybrid = body_fat_hybrid(inp)
+    if hybrid is not None:
+        return hybrid
     navy = body_fat_navy(inp)
     if navy is not None:
         return navy
+    bia = body_fat_bia(inp)
+    if bia is not None:
+        return bia
     return body_fat_deurenberg(inp)
 
 
@@ -249,6 +292,8 @@ CALCULATORS: dict[Metric, object] = {
     Metric.BAI: bai,
     Metric.BODY_FAT_NAVY: body_fat_navy,
     Metric.BODY_FAT_DEURENBERG: body_fat_deurenberg,
+    Metric.BODY_FAT_BIA: body_fat_bia,
+    Metric.BODY_FAT_HYBRID: body_fat_hybrid,
     Metric.RFM: relative_fat_mass,
     Metric.FAT_MASS: fat_mass,
     Metric.LEAN_BODY_MASS: lean_body_mass,

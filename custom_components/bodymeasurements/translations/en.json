@@ -12,7 +12,8 @@
           "weight": "Weight entity",
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
-          "neck": "Neck circumference entity"
+          "neck": "Neck circumference entity",
+          "impedance": "Impedance entity (optional smart scale BIA)"
         }
       }
     },
@@ -35,7 +36,8 @@
           "weight": "Weight entity",
           "waist": "Waist circumference entity",
           "hip": "Hip circumference entity",
-          "neck": "Neck circumference entity"
+          "neck": "Neck circumference entity",
+          "impedance": "Impedance entity (optional smart scale BIA)"
         }
       }
     },
@@ -63,6 +65,8 @@
       "body_adiposity_index": { "name": "Body adiposity index" },
       "body_fat_navy": { "name": "Body fat (Navy tape)" },
       "body_fat_deurenberg": { "name": "Body fat (Deurenberg)" },
+      "body_fat_bia": { "name": "Body fat (BIA)" },
+      "body_fat_hybrid": { "name": "Body fat (Hybrid BIA + Tape)" },
       "relative_fat_mass": { "name": "Relative fat mass" },
       "fat_mass": { "name": "Fat mass" },
       "lean_body_mass": { "name": "Lean body mass" },

@@ -83,6 +83,37 @@ async def test_full_measurements_flow(hass: HomeAssistant) -> None:
     handler.unload()
 
 
+async def test_hybrid_flow_with_impedance(hass: HomeAssistant) -> None:
+    """Configuring impedance unlocks BIA and Hybrid body fat sensors."""
+    handler = MeasurementsHandler(
+        hass,
+        _config(
+            **{
+                CONF_SENSOR_WEIGHT: "sensor.weight",
+                CONF_SENSOR_WAIST: "sensor.waist",
+                CONF_SENSOR_NECK: "sensor.neck",
+                "impedance": "sensor.impedance",
+            }
+        ),
+        "e_hybrid",
+    )
+
+    hybrid: list[float] = []
+    bia: list[float] = []
+    handler.subscribe(Metric.BODY_FAT_HYBRID, hybrid.append)
+    handler.subscribe(Metric.BODY_FAT_BIA, bia.append)
+
+    hass.states.async_set("sensor.weight", "80.0")
+    hass.states.async_set("sensor.waist", "85.0")
+    hass.states.async_set("sensor.neck", "38.0")
+    hass.states.async_set("sensor.impedance", "500.0")
+    await hass.async_block_till_done()
+
+    assert hybrid and 17 < hybrid[-1] < 20
+    assert bia and 21 < bia[-1] < 24
+    handler.unload()
+
+
 async def test_unavailable_source_is_ignored(hass: HomeAssistant) -> None:
     """Non-numeric / unavailable source states must not crash or publish."""
     handler = MeasurementsHandler(

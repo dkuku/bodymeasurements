@@ -154,6 +154,32 @@ _SENSORS: tuple[
     ),
     (
         SensorEntityDescription(
+            key=Metric.BODY_FAT_BIA.value,
+            translation_key="body_fat_bia",
+            icon="mdi:percent",
+            native_unit_of_measurement=PERCENTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=1,
+        ),
+        Metric.BODY_FAT_BIA,
+        (Metric.IMPEDANCE,),
+        None,
+    ),
+    (
+        SensorEntityDescription(
+            key=Metric.BODY_FAT_HYBRID.value,
+            translation_key="body_fat_hybrid",
+            icon="mdi:percent",
+            native_unit_of_measurement=PERCENTAGE,
+            state_class=SensorStateClass.MEASUREMENT,
+            suggested_display_precision=1,
+        ),
+        Metric.BODY_FAT_HYBRID,
+        (Metric.NECK, Metric.WAIST, Metric.IMPEDANCE),
+        None,
+    ),
+    (
+        SensorEntityDescription(
             key=Metric.BODY_FAT_DEURENBERG.value,
             translation_key="body_fat_deurenberg",
             icon="mdi:percent",
