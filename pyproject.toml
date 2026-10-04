@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bodymeasurements"
-version = "0.1.0"
-description = "Home Assistant custom integration deriving body-composition metrics from tape measurements (no bio-impedance scale required)"
+version = "0.2.0"
+description = "Body composition engine and Home Assistant integration combining tape measurements with smart scale BIA to overcome trunk blindness"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 requires-python = ">=3.13"
