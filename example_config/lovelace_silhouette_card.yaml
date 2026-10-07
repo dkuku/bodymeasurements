@@ -1,0 +1,200 @@
+# example_config/lovelace_silhouette_card.yaml
+#
+# Interactive Picture Elements card for Home Assistant Dashboard.
+#
+# Note: The silhouette image is automatically served by the integration at:
+#   /bodymeasurements_static/body_silhouette.jpg
+# (You can also place it in /config/www/body_silhouette.jpg and use /local/body_silhouette.jpg)
+
+type: picture-elements
+image: /bodymeasurements_static/body_silhouette.jpg
+elements:
+  # Waga (Weight)
+  - type: state-label
+    entity: input_number.body_weight
+    prefix: "Waga: "
+    suffix: " kg"
+    tap_action:
+      action: more-info
+    style:
+      top: 8%
+      left: 20%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.9)
+      color: "#a78bfa"
+      border: 1px solid rgba(167, 139, 250, 0.5)
+      border-radius: 12px
+      padding: 4px 10px
+      font-size: 13px
+      font-weight: bold
+
+  # Szyja (Neck)
+  - type: state-label
+    entity: input_number.body_neck
+    prefix: "Szyja: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 19%
+      left: 50%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Klatka piersiowa (Chest)
+  - type: state-label
+    entity: input_number.body_chest
+    prefix: "Klatka: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 29%
+      left: 50%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Biceps / Ramię
+  - type: state-label
+    entity: input_number.body_biceps
+    prefix: "Biceps: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 33%
+      left: 17%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Talia (Waist)
+  - type: state-label
+    entity: input_number.body_waist
+    prefix: "Talia: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 41%
+      left: 50%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Biodra (Hip)
+  - type: state-label
+    entity: input_number.body_hip
+    prefix: "Biodra: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 48%
+      left: 50%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Nadgarstek (Wrist)
+  - type: state-label
+    entity: input_number.body_wrist
+    prefix: "Nadgarstek: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 50%
+      left: 82%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Udo (Thigh)
+  - type: state-label
+    entity: input_number.body_thigh
+    prefix: "Udo: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 58%
+      left: 63%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Łydka (Calf)
+  - type: state-label
+    entity: input_number.body_calf
+    prefix: "Łydka: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 76%
+      left: 63%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600
+
+  # Kostka (Ankle)
+  - type: state-label
+    entity: input_number.body_ankle
+    prefix: "Kostka: "
+    suffix: " cm"
+    tap_action:
+      action: more-info
+    style:
+      top: 87%
+      left: 63%
+      transform: translate(-50%, -50%)
+      background: rgba(15, 23, 42, 0.85)
+      color: "#38bdf8"
+      border: 1px solid rgba(56, 189, 248, 0.4)
+      border-radius: 12px
+      padding: 3px 8px
+      font-size: 12px
+      font-weight: 600

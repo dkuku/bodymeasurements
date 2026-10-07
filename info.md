@@ -31,3 +31,4 @@ The official measurement companion to [**bodymiscale**](https://github.com/dkuku
 1. Install via HACS, then **restart Home Assistant**.
 2. **Settings → Devices & Services → Add Integration → Body Measurements**.
 3. Enter name, birthday, gender, and height; select your **weight** entity and, optionally, waist / hip / neck / calf / wrist / etc.
+4. Add the interactive body silhouette card to your dashboard using the templates in [`example_config/`](example_config/).

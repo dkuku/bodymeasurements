@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 
 from awesomeversion import AwesomeVersion
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import __version__ as HA_VERSION
 from homeassistant.core import HomeAssistant
@@ -13,6 +15,20 @@ from .const import DOMAIN, HANDLERS, MIN_REQUIRED_HA_VERSION, PLATFORMS, STARTUP
 from .handler import MeasurementsHandler
 
 _LOGGER = logging.getLogger(__name__)
+
+
+async def _async_register_static_paths(hass: HomeAssistant) -> None:
+    """Register static path for integration assets."""
+    www_dir = Path(__file__).parent / "www"
+    http = getattr(hass, "http", None)
+    if www_dir.is_dir() and http and hasattr(http, "async_register_static_paths"):
+        await http.async_register_static_paths(
+            [
+                StaticPathConfig(
+                    "/bodymeasurements_static", str(www_dir), cache_headers=True
+                )
+            ]
+        )
 
 
 def is_ha_supported() -> bool:
@@ -34,6 +50,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     if hass.data.get(DOMAIN) is None:
         hass.data[DOMAIN] = {HANDLERS: {}}
         _LOGGER.info(STARTUP_MESSAGE)
+        await _async_register_static_paths(hass)
 
     config = {**entry.data, **entry.options}
     handler = MeasurementsHandler(hass, config, entry.entry_id)

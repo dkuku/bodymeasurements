@@ -102,7 +102,22 @@ Copy `custom_components/bodymeasurements` into your Home Assistant `<config>/cus
      - **Wrist** (skeletal frame bone correction)
      - **Thigh**, **Chest**, **Biceps**, **Ankle**
 
-> 💡 **Tip:** Create `input_number` helpers in Home Assistant (e.g. `input_number.waist_circumference`) to easily update your tape measurements from your dashboard whenever you take new measurements.
+> 💡 **Tip:** Pre-made helpers and an interactive body silhouette dashboard card are provided in [`example_config/`](example_config/)! See the dashboard guide below.
+
+---
+
+## 🎨 Interactive Body Silhouette Dashboard Card
+
+You can add an interactive **human body silhouette card** to your Home Assistant dashboard. Clicking on any measurement guide (neck, chest, biceps, waist, hip, wrist, thigh, calf, ankle) opens a popup to enter your latest tape measurements.
+
+The silhouette graphic is automatically served directly by the integration at `/bodymeasurements_static/body_silhouette.jpg`.
+
+![Interactive Body Silhouette Card](assets/body_silhouette.jpg)
+
+### Quick Setup:
+1. Copy or include helper entities from [`example_config/input_numbers.yaml`](example_config/input_numbers.yaml) into your `configuration.yaml`.
+2. Add a manual card to your Lovelace dashboard with the code from [`example_config/lovelace_silhouette_card.yaml`](example_config/lovelace_silhouette_card.yaml).
+3. Connect the helpers to your profile in **Settings → Devices & Services → Body Measurements**.
 
 ---
 
