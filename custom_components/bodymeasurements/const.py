@@ -5,7 +5,7 @@ from homeassistant.const import Platform
 MIN_REQUIRED_HA_VERSION = "2026.3.0"
 NAME = "Body Measurements"
 DOMAIN = "bodymeasurements"
-VERSION = "0.3.0"
+VERSION = "0.4.0"
 ISSUE_URL = "https://github.com/dkuku/bodymeasurements/issues"
 
 # System keys for hass.data[DOMAIN]

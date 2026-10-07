@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bodymeasurements"
-version = "0.3.0"
+version = "0.4.0"
 description = "Pure anthropometric body-composition platform for Home Assistant: volume, density, bone correction, and muscle-to-fat ratios from tape measurements and weight"
 readme = "README.md"
 license = { text = "Apache-2.0" }
