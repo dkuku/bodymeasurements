@@ -1,25 +1,8 @@
-# example_config/input_numbers.yaml
-#
-# Helper entities (input_number) for Body Measurements.
-# Add to your configuration.yaml:
-#   input_number: !include example_config/input_numbers.yaml
-# (or paste under your existing input_number: section).
-
-body_weight:
-  name: Waga
-  min: 30
-  max: 250
-  step: 0.1
-  unit_of_measurement: kg
-  icon: mdi:scale-bathroom
-  mode: box
-
 body_neck:
   name: Obwód szyi
   min: 20
   max: 60
   step: 0.5
-  initial: 38.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -29,7 +12,6 @@ body_chest:
   min: 50
   max: 180
   step: 0.5
-  initial: 100.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -39,7 +21,6 @@ body_waist:
   min: 40
   max: 180
   step: 0.5
-  initial: 85.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -49,7 +30,6 @@ body_hip:
   min: 40
   max: 180
   step: 0.5
-  initial: 95.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -59,7 +39,6 @@ body_biceps:
   min: 15
   max: 70
   step: 0.5
-  initial: 34.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -69,7 +48,6 @@ body_wrist:
   min: 10
   max: 30
   step: 0.5
-  initial: 17.5
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -79,7 +57,6 @@ body_thigh:
   min: 25
   max: 100
   step: 0.5
-  initial: 56.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -89,7 +66,6 @@ body_calf:
   min: 20
   max: 70
   step: 0.5
-  initial: 37.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
@@ -99,7 +75,6 @@ body_ankle:
   min: 15
   max: 40
   step: 0.5
-  initial: 22.0
   unit_of_measurement: cm
   icon: mdi:tape-measure
   mode: box
