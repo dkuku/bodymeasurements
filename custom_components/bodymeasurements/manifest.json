@@ -5,6 +5,9 @@
     "@dkuku"
   ],
   "config_flow": true,
+  "dependencies": [
+    "http"
+  ],
   "documentation": "https://github.com/dkuku/bodymeasurements",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/dkuku/bodymeasurements/issues",
